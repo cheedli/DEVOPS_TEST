@@ -1,0 +1,63 @@
+- name: Deploy ai application on Kubernetes
+  hosts: all
+  gather_facts: false
+  become: yes
+  tasks:
+    - name: Create deployment
+      k8s:
+        kubeconfig: "~/.kube/config"
+        state: present
+        definition:
+          apiVersion: apps/v1
+          kind: Deployment
+          metadata:
+            name: themenufy-ai-deployment
+            namespace: themenufy
+            labels:
+              app: themenufy-ai
+          spec:
+            replicas: 1
+            selector:
+              matchLabels:
+                app: themenufy-ai
+            template:
+              metadata:
+                labels:
+                  app: themenufy-ai
+              spec:
+                containers:
+                  - name: themenufy-ai
+                    image: taharejeb97/themenufy-ai:v1.0.11-dev
+                    ports:
+                      - containerPort: 2233
+                nodeSelector:
+                     kubernetes.io/hostname: worker2
+        # context: "kubernetes-admin@kubernetes"
+        # api_key: "kubeconfig-user-tz4cgnc87h:c5bblz84ddpxbmbnr9wf6fn5n4rw8k8xdn4t4wjgwcj7xq9fzxprsg"
+       # verify_ssl: false
+
+    - name: Create service
+      k8s:
+        state: present
+        kubeconfig: "~/.kube/config"
+        verify_ssl: no
+        definition:
+          apiVersion: v1
+          kind: Service
+          metadata:
+            name: themenufy-ai
+            namespace: themenufy
+            labels:
+              app: themenufy-ai
+          spec:
+            selector:
+              app: themenufy-ai
+            ports:
+              - protocol: TCP
+                port: 2233
+                targetPort: 2233
+            type: LoadBalancer
+          # Disable SSL verification (not recommended for production)
+#        kubeconfig: "~/.kube/config"
+#        api_key: "kubeconfig-user-tz4cgnc87h:c5bblz84ddpxbmbnr9wf6fn5n4rw8k8xdn4t4wjgwcj7xq9fzxprsg"
+#        context: "ipact"
