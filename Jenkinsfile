@@ -9,7 +9,7 @@ pipeline{
 
     environment {
        DOCKERHUB_USERNAME = "taharejeb97"
-       DEV_TAG = "${DOCKERHUB_USERNAME}/themenufy-ai:v1.0.0-dev"
+       DEV_TAG = "${DOCKERHUB_USERNAME}/themenufy-ai:v1.0.1-dev"
        STAGING_TAG = "${DOCKERHUB_USERNAME}/themenufy-ai:v1.0.0-staging"
        PROD_TAG = "${DOCKERHUB_USERNAME}/themenufy-ai:v1.0.0-prod"
         }
