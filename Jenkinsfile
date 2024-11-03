@@ -39,7 +39,7 @@ pipeline{
     }
         stage('Git Checkout'){
             steps{
-                git branch: 'develop', credentialsId: 'git', url: 'GIT_URL'
+                git branch: 'develop', credentialsId: 'git', url: 'https://github.com/cheedli/DEVOPS_TEST'
 	    }
         }
         
