@@ -31,7 +31,14 @@ pipeline {
 
         stage('Git Checkout') {
             steps {
-                git branch: branchName, credentialsId: 'github', url: 'https://github.com/cheedli/DEVOPS_TEST.git'
+                // Increase Git buffer size to handle large repositories
+                sh 'git config --global http.postBuffer 524288000'
+                
+                // Retry mechanism to handle temporary network failures
+                retry(3) {
+                    // Checkout code from specified branch, with SSH for reliability
+                    git branch: branchName, credentialsId: 'github-ssh', url: 'git@github.com:cheedli/DEVOPS_TEST.git'
+                }
             }
         }
     }
